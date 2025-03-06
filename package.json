@@ -4,7 +4,7 @@
   "description": "Servidor para processar pagamentos com Square e Heroku",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.3",
