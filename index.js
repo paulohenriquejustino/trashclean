@@ -1,83 +1,56 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const squareConnect = require('square-connect');
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const fetch = require("node-fetch");
 
 const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
 app.use(bodyParser.json());
 
-const accessToken = 'EAAAl5TAZRTbCN27reS7UQNmiHNt0dn9Qo3Cx7Fya7K0IGXyhC8Sn-2UKoS2Pcdy';
-const locationId = 'LSB0H89DCVKPH';
+const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
+const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID;
 
-const defaultClient = squareConnect.ApiClient.instance;
-defaultClient.basePath = 'https://connect.squareup.com/v2/payments';
-const oauth2 = defaultClient.authentications['oauth2'];
-oauth2.accessToken = accessToken;
+app.post("/process-payment", async (req, res) => {
+  const { nonce, amount } = req.body;
 
-const paymentsApi = new squareConnect.PaymentsApi();
-const subscriptionsApi = new squareConnect.SubscriptionsApi();
-const customersApi = new squareConnect.CustomersApi();
-
-// 📌 1️⃣ Pagamento Único (Cartão de Crédito)
-app.post('/process-payment', async (req, res) => {
-  const { nonce, amount, currency } = req.body;
-
-  const requestBody = {
-    source_id: nonce,
-    amount_money: {
-      amount: amount,
-      currency: currency,
-    },
-    idempotency_key: require('crypto').randomBytes(12).toString('hex'),
-  };
+  if (!nonce || !amount) {
+    return res.status(400).json({ status: "error", message: "Dados inválidos." });
+  }
 
   try {
-    const response = await paymentsApi.createPayment(requestBody);
-    res.json({ status: 'success', data: response });
+    const response = await fetch("https://connect.squareup.com/v2/payments", {
+      method: "POST",
+      headers: {
+        "Square-Version": "2023-04-19",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SQUARE_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        source_id: nonce,
+        idempotency_key: `${Date.now()}-${Math.random()}`,
+        amount_money: {
+          amount: amount,
+          currency: "USD",
+        },
+        location_id: SQUARE_LOCATION_ID,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      res.status(200).json({ status: "success", message: "Pagamento processado!", data });
+    } else {
+      res.status(400).json({ status: "error", message: data.errors[0].detail });
+    }
   } catch (error) {
-    const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
-    res.status(500).json({ status: 'error', message: errorMessage });
+    console.error("Erro ao processar pagamento:", error);
+    res.status(500).json({ status: "error", message: "Erro interno do servidor" });
   }
 });
 
-// 📌 2️⃣ Criar Cliente no Square (Necessário para assinatura)
-app.post('/create-customer', async (req, res) => {
-  const { email, given_name, family_name } = req.body;
-
-  const customerData = {
-    given_name,
-    family_name,
-    email_address: email,
-    idempotency_key: require('crypto').randomBytes(12).toString('hex'),
-  };
-
-  try {
-    const response = await customersApi.createCustomer(customerData);
-    res.json(response);
-  } catch (error) {
-    const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
-    res.status(500).json({ status: 'error', message: errorMessage });
-  }
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
-
-// 📌 3️⃣ Criar Assinatura
-app.post('/create-subscription', async (req, res) => {
-  const { customerId, planId } = req.body;
-
-  const subscriptionData = {
-    customer_id: customerId,
-    location_id: locationId,
-    plan_id: planId,
-    idempotency_key: require('crypto').randomBytes(12).toString('hex'),
-  };
-
-  try {
-    const response = await subscriptionsApi.createSubscription(subscriptionData);
-    res.json({ status: 'success', data: response });
-  } catch (error) {
-    const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
-    res.status(500).json({ status: 'error', message: errorMessage });
-  }
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
