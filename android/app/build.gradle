@@ -1,0 +1,58 @@
+plugins {
+    id "com.android.application"
+    // FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.bin_shield_app"
+    compileSdk = 35 // Defina explicitamente o valor para a compileSdkVersion
+    ndkVersion = "25.2.9519653" // Substitua com a versão correta do NDK instalada
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        minSdkVersion 24 // Defina para 24 como sugerido
+        applicationId = "com.example.bin_shield_app"
+        targetSdk = 35 // Atualizado para SDK mais recente
+        versionCode = 1 // Substitua pelo código correto da versão
+        versionName = "1.0.0" // Substitua pelo nome correto da versão
+
+        manifestPlaceholders = [
+            'appAuthRedirectScheme': 'com.googleusercontent.apps.AIzaSyAI-i0OmwtaUNfMzWtTKkgK2f1pLYnSP7g'
+        ]
+    }
+
+    buildTypes {
+        release {
+            // Configure assinaturas para builds de release
+            signingConfig = signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.10.1' // Atualize o core KTX para a versão mais recente
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
+    
+    
+}
+
+
+flutter {
+    source = "../.."
+}

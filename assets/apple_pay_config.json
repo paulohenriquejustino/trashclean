@@ -1,0 +1,10 @@
+{
+  "provider": "apple",
+  "data": {
+    "merchantIdentifier": "merchant.com.example",
+    "displayName": "My App",
+    "supportedNetworks": ["visa", "mastercard"],
+    "countryCode": "US",
+    "currencyCode": "USD"
+  }
+}

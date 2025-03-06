@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "771775333882",
+    "project_id": "binshieldapp",
+    "storage_bucket": "binshieldapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771775333882:android:8dfde4a8b633b8f4091043",
+        "android_client_info": {
+          "package_name": "com.example.bin_shield_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771775333882-a4eu8n69cml0mlvlk7nieim5q5l9q1la.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bin_shield_app",
+            "certificate_hash": "fae05244ca772a6f0ab2859b99e8204a02e2f71a"
+          }
+        },
+        {
+          "client_id": "771775333882-l0fvtog38kjsb72odkiig93fm378t91l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB64QWdz1nF6xolGbxMLn6DdZu1dSdBf90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771775333882-focdbq182ljnsra02a3km83tknjht7ms.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "771775333882-snt22k8e373gtd1eublo0s4smkrc1vi7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.binShieldApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
