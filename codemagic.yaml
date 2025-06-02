@@ -1,6 +1,6 @@
 workflows:
   build-ios:
-    name: Build iOS with iOS 13.0
+    name: Build iOS with iOS 14.0
     environment:
       flutter: stable
       xcode: latest
@@ -11,7 +11,7 @@ workflows:
           
       - name: Setup iOS project and create/fix Podfile
         script: |
-          echo "Setting up iOS project for deployment target 13.0..."
+          echo "Setting up iOS project for deployment target 14.0..."
           
           # Certifica que o diretório ios existe
           mkdir -p ios/Runner.xcodeproj
@@ -24,7 +24,7 @@ workflows:
           
           # Cria ou substitui o Podfile com configuração correta
           cat > ios/Podfile << 'EOF'
-          platform :ios, '13.0'
+          platform :ios, '14.0'
           
           ENV['COCOAPODS_DISABLE_STATS'] = 'true'
           
@@ -62,7 +62,7 @@ workflows:
             installer.pods_project.targets.each do |target|
               flutter_additional_ios_build_settings(target)
               target.build_configurations.each do |config|
-                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
               end
             end
           end
@@ -79,14 +79,14 @@ workflows:
           # Corrige o project.pbxproj se existir
           if [ -f "ios/Runner.xcodeproj/project.pbxproj" ]; then
             echo "Updating project.pbxproj..."
-            sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9]*\.[0-9]*/IPHONEOS_DEPLOYMENT_TARGET = 13.0/g' ios/Runner.xcodeproj/project.pbxproj
+            sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9]*\.[0-9]*/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/Runner.xcodeproj/project.pbxproj
           fi
           
           # Corrige AppFrameworkInfo.plist se existir
           if [ -f "ios/Flutter/AppFrameworkInfo.plist" ]; then
             echo "Updating AppFrameworkInfo.plist..."
-            /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 13.0" ios/Flutter/AppFrameworkInfo.plist 2>/dev/null || \
-            /usr/libexec/PlistBuddy -c "Add :MinimumOSVersion string 13.0" ios/Flutter/AppFrameworkInfo.plist
+            /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 14.0" ios/Flutter/AppFrameworkInfo.plist 2>/dev/null || \
+            /usr/libexec/PlistBuddy -c "Add :MinimumOSVersion string 14.0" ios/Flutter/AppFrameworkInfo.plist
           fi
           
           echo "iOS deployment target configuration completed!"
