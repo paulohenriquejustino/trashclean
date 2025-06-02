@@ -107,15 +107,15 @@ workflows:
           mkdir -p build/ios/iphoneos
           # Se você quiser criar um IPA, descomente as linhas abaixo:
           # xcodebuild -workspace ios/Runner.xcworkspace \
-          #   -scheme Runner \
-          #   -configuration Release \
-          #   -destination 'generic/platform=iOS' \
-          #   -archivePath build/ios/Runner.xcarchive \
-          #   archive
-          # xcodebuild -exportArchive \
-          #   -archivePath build/ios/Runner.xcarchive \
-          #   -exportPath build/ios/iphoneos \
-          #   -exportOptionsPlist ios/ExportOptions.plist
+             -scheme Runner \
+             -configuration Release \
+             -destination 'generic/platform=iOS' \
+             -archivePath build/ios/Runner.xcarchive \
+              archive
+              xcodebuild -exportArchive \
+             -archivePath build/ios/Runner.xcarchive \
+             -exportPath build/ios/iphoneos \
+             -exportOptionsPlist ios/ExportOptions.plist
           
     artifacts:
       - build/ios/iphoneos/*.app
